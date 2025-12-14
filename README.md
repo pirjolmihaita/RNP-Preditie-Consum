@@ -35,5 +35,6 @@ Retelele neuronale (in special LSTM si RNN) au reusit sa invete tiparul consumul
 ## Cum sa rulezi proiectul
 1. Cloneaza repository-ul.
 2. Instaleaza bibliotecile din `requirements.txt`.
-3. Asigura-te ca ai fisierul de date (CSV).
+3. Asigura-te ca ai fisierul de date (CSV). Poți descărca setul de date de aici:
+[Descarcă CLEAN_House1.csv](https://drive.google.com/file/d/1HZdtZAHk93Gdk01I-Uq8FJfOHEMQ8U08/view?usp=sharing)
 4. Ruleaza notebook-ul.
