@@ -10,6 +10,7 @@ Acest proiect are ca scop predictia consumului de energie. Am folosit in princip
    - Am reesantionat datele la o frecventa de 1 minut.
    - Am impartit datele in antrenare (80%) si testare (20%).
    - Am scalat datele (0-1) pentru ca retelele neuronale sa invete corect.
+   - Crearea Secventelor (Sliding Window): Am transformat seria temporala intr-o structura de invatare supravegheata, generand ferestre de timp (ex: 60 de minute) necesare pentru antrenarea modelelor secventiale.
 
 2. Modele implementate:
    - Retele Neuronale (Focusul proiectului):
