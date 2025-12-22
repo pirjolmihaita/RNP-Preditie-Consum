@@ -1,41 +1,62 @@
-# Proiect RNP - Predictie Consum Energie
+# Proiect RNP - Predicție Consum Energie (Time Series)
+
+## # Proiect RNP - Predictie Consum Energie (Time Series)
 
 ## Descriere
-Acest proiect are ca scop predictia consumului de energie. Am folosit in principal Retele Neuronale Recurente, dar am testat si un model statistic pentru comparatie. Datele reprezinta consumul de energie (in watti) masurat la fiecare minut.
+Acest proiect are ca scop predictia consumului de energie electrica utilizand serii de timp. Proiectul exploreaza si compara performanta a trei paradigme diferite:
+1. Deep Learning (Secvential): LSTM, GRU, RNN, DeepAR.
+2. Machine Learning Clasic (Tabelar): XGBoost, LightGBM (Gradient Boosting).
+3. Model Statistic (Baseline): Prophet (Facebook).
 
-## Ce am facut pana acum
-1. Pregatirea datelor:
-   - Am citit datele din fisierul CSV.
-   - Am curatat datele (sters valori lipsa).
-   - Am reesantionat datele la o frecventa de 1 minut.
-   - Am impartit datele in antrenare (80%) si testare (20%).
-   - Am scalat datele (0-1) pentru ca retelele neuronale sa invete corect.
-   - Crearea Secventelor (Sliding Window): Am transformat seria temporala intr-o structura de invatare supravegheata, generand ferestre de timp (ex: 60 de minute) necesare pentru antrenarea modelelor secventiale.
+Datele reprezinta consumul de energie (in watti) masurat la fiecare minut pentru o locuinta rezidentiala.
 
-2. Modele implementate:
-   - Retele Neuronale (Focusul proiectului):
-     - LSTM (Long Short-Term Memory): retea buna pentru secvente lungi.
-     - RNN (Recurrent Neural Network): retea clasica, folosind celule GRU.
-     - DeepAR: implementare proprie folosind LSTM si o functie de loss probabilistica.
-   - Model de comparatie (Baseline):
-     - Prophet: model statistic de la Facebook, folosit pentru a vedea daca retelele neuronale obtin rezultate mai bune decat metodele clasice.
+## Metodologie si Procesare
 
-3. Evaluare:
-   - Am antrenat fiecare model.
-   - Am comparat erorile (RMSE si MAE).
-   - Am generat grafice comparative intre predictiile modelelor si datele reale.
+### 1. Pregatirea Datelor
+- Curatare: Eliminarea valorilor lipsa si a outlierilor evidenti.
+- Re-esantionare: Datele au fost aduse la o frecventa uniforma de 1 minut.
+- Scalare: Normalizare MinMax (0-1) pentru retelele neuronale.
+- Split: Impartirea datelor in Antrenare (80%) si Testare (20%).
 
-## Rezultate
-Retelele neuronale (in special LSTM si RNN) au reusit sa invete tiparul consumului mult mai bine decat modelul statistic Prophet, avand o eroare mult mai mica. Detaliile si graficele sunt in notebook.
+### 2. Feature Engineering (Pentru modelele ML)
+Pentru a aplica algoritmi de tip Gradient Boosting (care nu proceseaza secvente direct ca LSTM), am transformat seria de timp in date tabelare:
+- Lag Features: Valorile consumului din trecut (t-1, t-5, t-15, t-60 minute).
+- Rolling Statistics: Media mobila si deviatia standard pe fereastra de 1 ora.
+- Date Temporale: Codificarea ciclica a orei (Sin/Cos) si indicatori pentru Weekend.
 
-## Planuri de viitor
-- Antrenare pe mai multe case din dataset pentru a verifica generalizarea.
-- Optimizarea parametrilor retelelor (numar neuroni, epoci) pentru a scadea eroarea.
-- Adaugarea de noi feature-uri (ora, ziua) pentru a ajuta reteaua sa inteleaga sezonalitatea.
+### 3. Modele Implementate
+- LSTM (Long Short-Term Memory): Retea recurenta capabila sa invete dependente pe termen lung.
+- GRU & RNN: Variante simplificate ale arhitecturilor recurente.
+- DeepAR: Model probabilistic (bazat pe LSTM) care estimeaza si incertitudinea predictiei, nu doar valoarea fixa.
+- XGBoost & LightGBM: Modele bazate pe arbori de decizie, antrenate pe features derivate manual.
+- Prophet: Model statistic folosit ca referinta (baseline).
+
+## Rezultate si Concluzii
+Analiza comparativa a relevat urmatoarele:
+
+1. Viteza vs. Performanta: Modelele de Machine Learning (LightGBM, XGBoost) au fost extrem de rapide la antrenare (secunde) si au oferit o acuratete surprinzatoare, depasind in unele cazuri retelele neuronale complexe pe datele tabulare.
+2. Deep Learning: LSTM si DeepAR au demonstrat o capacitate buna de generalizare a trendului, dar cu un cost computational mult mai ridicat (timpi de antrenare de ordinul zecilor de minute).
+3. Baseline: Prophet a oferit o baza de comparatie utila, dar a avut dificultati in a captura volatilitatea rapida a consumului la nivel de minut.
+
+Graficele detaliate cu predictiile si tabelul complet cu metricile (MAE, RMSE) sunt disponibile in Notebook.
+
+## Directii Viitoare
+Pentru a imbunatati performanta si robustetea proiectului, se pot aborda urmatoarele directii:
+
+1. Generalizare: Antrenarea si validarea modelelor pe mai multe case din dataset pentru a verifica capacitatea de generalizare a arhitecturilor.
+2. Hyperparameter Tuning: Utilizarea unor biblioteci automate (precum Optuna) pentru a optimiza numarul de neuroni, learning rate-ul si parametrii arborilor decizionali.
+
 
 ## Cum sa rulezi proiectul
-1. Cloneaza repository-ul.
-2. Instaleaza bibliotecile din `requirements.txt`.
-3. Asigura-te ca ai fisierul de date (CSV). Poti descarca setul de date de aici:
-[Descarcă CLEAN_House1.csv](https://drive.google.com/file/d/1HZdtZAHk93Gdk01I-Uq8FJfOHEMQ8U08/view?usp=sharing)
-4. Ruleaza notebook-ul.
+
+1. Cloneaza repository-ul:
+   git clone <link-ul-tau-de-github>
+
+2. Instaleaza bibliotecile necesare:
+   pip install -r requirements.txt
+
+3. Datele:
+   Asigura-te ca fisierul CLEAN_House1.csv se afla in directorul radacina.
+
+4. Ruleaza Notebook-ul:
+   Deschide fisierul .ipynb in Jupyter Notebook, JupyterLab sau Google Colab si ruleaza celulele secvential.
