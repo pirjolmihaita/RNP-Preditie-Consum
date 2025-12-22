@@ -56,6 +56,7 @@ Pentru a imbunatati performanta si robustetea proiectului, se pot aborda urmatoa
    pip install -r requirements.txt
 
 3. Datele:
+   Poti descarca setul de date de aici: [Descarca CLEAN_House1.csv] -> https://drive.google.com/file/d/1HZdtZAHk93Gdk01I-Uq8FJfOHEMQ8U08/view?usp=drive_link
    Asigura-te ca fisierul CLEAN_House1.csv se afla in directorul radacina.
 
 4. Ruleaza Notebook-ul:
