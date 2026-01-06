@@ -9,3 +9,4 @@ jupyter
 xgboost
 lightgbm
 scikit-learn
+seaborn
