@@ -1,1 +1,7 @@
-*.csv 
+# Ignora mediul virtual
+mihai_venv/
+venv/
+
+# Ignora fisierele de date mari
+*.csv
+*.pkl
