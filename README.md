@@ -2,7 +2,7 @@
 
 ## Descriere
 Acest proiect are ca scop predictia consumului de energie electrica utilizand serii de timp. Proiectul reprezinta o analiza comparativa intre trei paradigme diferite de modelare:
-1. Deep Learning (Secvential): LSTM, GRU, SimpleRNN, DeepAR (Abordare probabilistica).
+1. Deep Learning (Secvential): LSTM, GRU, SimpleRNN.
 2. Machine Learning Clasic (Tabelar): XGBoost, LightGBM (Gradient Boosting).
 3. Model Statistic (Baseline): Prophet.
 
@@ -18,35 +18,42 @@ Proiectul este impartit in 3 etape distincte (Notebook-uri):
 ## Metodologie si Procesare
 
 ### 1. Pregatirea Datelor
-- Curatare: Eliminarea valorilor lipsa si re-esantionare la frecventa de 1 minut.
+- Curatare: Eliminarea valorilor lipsa si re-esantionare la frecventa de 1 ora.
 - Clustering: Utilizarea algoritmului K-Means pentru a identifica regimuri de consum (Cluster 0 vs Cluster 1) si utilizarea acestora ca feature suplimentar.
 - Feature Engineering:
-    - Extragerea informatiilor temporale: Ora, Ziua saptamanii.
+    - Extragerea informatiilor temporale: Ora, Ziua saptamanii, Luna.
     - Transformari ciclice: Sinus si Cosinus pentru ora (Hour_Sin, Hour_Cos).
     - Indicatori binari: IsWeekend.
 - Scalare: Utilizarea RobustScaler pentru a reduce impactul outlierilor (varfurilor de consum).
-- Secventiere: Crearea unor ferestre glisante (Window Size = 60 minute) pentru modelele de Deep Learning.
+- Secventiere: Crearea unor ferestre glisante (Window Size = 48 ore) pentru modelele de Deep Learning.
 
 ### 2. Feature Engineering pentru ML (XGBoost/LightGBM)
 Deoarece modelele de tip Gradient Boosting nu proceseaza secvente temporale direct, datele au fost transformate in format tabelar folosind:
-- Lag Features: Valorile consumului din trecut (t-1, t-5, t-15, t-60 minute).
-- Rolling Statistics: Media mobila si deviatia standard calculate pe o fereastra de 60 de minute.
+- Lag Features: Valorile consumului din trecut (t-1, t-24, t-68 ore).
+- Rolling Statistics: Media mobila si deviatia standard calculate pe o fereastra de 24 de ore.
 
 ### 3. Modele Implementate
 - **LSTM (Stacked)**: Retea recurenta cu straturi multiple si Dropout pentru regularizare.
 - **GRU**: Arhitectura recurenta optimizata pentru eficienta computationala.
 - **SimpleRNN**: Retea recurenta de baza.
-- **DeepAR**: Model probabilistic bazat pe LSTM care estimeaza parametrii distributiei (Mu si Sigma) folosind Laplace Negative Log Likelihood.
 - **XGBoost & LightGBM**: Algoritmi de Gradient Boosting antrenati pe setul de date tabelar extins.
 - **Prophet**: Model aditiv utilizat ca referinta pentru sezonalitate.
 
 ## Rezultate si Concluzii
-In urma experimentelor pe ambele case (House1 si House2), s-au observat urmatoarele:
 
-1. **Performanta Superioara a Gradient Boosting**: Modelele LightGBM si XGBoost au obtinut cele mai mici erori (MAE intre 52W si 63W), avand o eroare relativa de aproximativ 11-13% din consumul mediu.
-2. **Eficienta**: Modelele ML clasice s-au antrenat in cateva secunde (4-8 secunde), in timp ce retelele neuronale (LSTM, GRU, DeepAR) au necesitat peste o ora pentru antrenare, oferind rezultate usor inferioare.
-3. **Deep Learning**: Dintre modelele neuronale, GRU a oferit cel mai bun echilibru, dar nu a reusit sa depaseasca modelele bazate pe arbori pe acest tip de date tabulare.
-4. **Baseline**: Prophet nu a reusit sa captureze volatilitatea ridicata a datelor la nivel de minut, inregistrand cele mai mari erori.
+In urma experimentelor realizate pe cele doua gospodarii analizate (House1 si House2), pot fi formulate urmatoarele concluzii:
+
+Performanta superioara a modelelor bazate pe Gradient Boosting
+Modelele LightGBM si XGBoost au obtinut cele mai bune rezultate pe ambele case, inregistrand cele mai mici valori ale erorilor MAE si RMSE. Valorile MAE s-au situat in intervalul 149–176 W, demonstrand o capacitate ridicata de a surprinde relatiile neliniare dintre caracteristicile temporale si consumul agregat de energie.
+
+Eficienta computationala ridicata pentru modelele ML clasice
+Modelele LightGBM si XGBoost s-au antrenat foarte rapid (sub 1 secunda per casa), oferind in acelasi timp performante superioare fata de modelele de deep learning. Acest lucru le face extrem de potrivite pentru aplicatii practice unde timpul de antrenare si costurile computationale sunt critice.
+
+Modelele de Deep Learning nu au depasit ML-ul clasic
+Dintre modelele neuronale testate, LSTM si GRU au avut performante comparabile, insa erorile obtinute au fost mai mari decat cele ale modelelor bazate pe arbori de decizie. In plus, timpul de antrenare a fost semnificativ mai mare (peste 60 de secunde), fara un castig clar de acuratete. Acest rezultat sugereaza ca, pentru datele tabulare cu feature engineering explicit, modelele ML clasice sunt mai eficiente decat retelele recurente.
+
+Performanta limitata pentru modelele de tip baseline
+Modelul Prophet a inregistrat cele mai mari erori pentru ambele gospodarii. Acesta nu a reusit sa surprinda volatilitatea ridicata si schimbarile rapide de regim (weekday/weekend) caracteristice consumului energetic la nivel de locuinta, confirmand limitarile sale in contextul seriilor temporale foarte zgomotoase si neliniare.
 
 ## Cum sa rulezi proiectul
 
