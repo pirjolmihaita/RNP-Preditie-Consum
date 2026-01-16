@@ -43,16 +43,16 @@ Deoarece modelele de tip Gradient Boosting nu proceseaza secvente temporale dire
 
 In urma experimentelor realizate pe cele doua gospodarii analizate (House1 si House2), pot fi formulate urmatoarele concluzii:
 
-Performanta superioara a modelelor bazate pe Gradient Boosting
+1. Performanta superioara a modelelor bazate pe Gradient Boosting
 Modelele LightGBM si XGBoost au obtinut cele mai bune rezultate pe ambele case, inregistrand cele mai mici valori ale erorilor MAE si RMSE. Valorile MAE s-au situat in intervalul 149–176 W, demonstrand o capacitate ridicata de a surprinde relatiile neliniare dintre caracteristicile temporale si consumul agregat de energie.
 
-Eficienta computationala ridicata pentru modelele ML clasice
+2. Eficienta computationala ridicata pentru modelele ML clasice
 Modelele LightGBM si XGBoost s-au antrenat foarte rapid (sub 1 secunda per casa), oferind in acelasi timp performante superioare fata de modelele de deep learning. Acest lucru le face extrem de potrivite pentru aplicatii practice unde timpul de antrenare si costurile computationale sunt critice.
 
-Modelele de Deep Learning nu au depasit ML-ul clasic
+3. Modelele de Deep Learning nu au depasit ML-ul clasic
 Dintre modelele neuronale testate, LSTM si GRU au avut performante comparabile, insa erorile obtinute au fost mai mari decat cele ale modelelor bazate pe arbori de decizie. In plus, timpul de antrenare a fost semnificativ mai mare (peste 60 de secunde), fara un castig clar de acuratete. Acest rezultat sugereaza ca, pentru datele tabulare cu feature engineering explicit, modelele ML clasice sunt mai eficiente decat retelele recurente.
 
-Performanta limitata pentru modelele de tip baseline
+4. Performanta limitata pentru modelele de tip baseline
 Modelul Prophet a inregistrat cele mai mari erori pentru ambele gospodarii. Acesta nu a reusit sa surprinda volatilitatea ridicata si schimbarile rapide de regim (weekday/weekend) caracteristice consumului energetic la nivel de locuinta, confirmand limitarile sale in contextul seriilor temporale foarte zgomotoase si neliniare.
 
 ## Cum sa rulezi proiectul
